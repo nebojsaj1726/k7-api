@@ -60,7 +60,7 @@ router.patch("/:dreamId", async (req, res) => {
 
 router.delete("/:dreamId", async (req, res) => {
   try {
-    const deletedDream = await Dream.deleteOne({ _id: req.params.dreamtId });
+    const deletedDream = await Dream.deleteOne({ _id: req.params.dreamId });
     res.json(deletedDream);
   } catch (error) {
     res.json({ message: error });
