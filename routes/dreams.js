@@ -24,8 +24,18 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const dreams = await Dream.find();
-    res.json(dreams);
+    if (req.query.title && req.query.type) {
+      const $regex = new RegExp(escapeRegex(req.query.title), "gi");
+
+      const searchResults = await Dream.find({
+        title: { $regex },
+        type: req.query.type,
+      });
+      res.json(searchResults);
+    } else {
+      const dreams = await Dream.find();
+      res.json(dreams);
+    }
   } catch (error) {
     res.json({ message: error });
   }
@@ -66,5 +76,9 @@ router.delete("/:dreamId", async (req, res) => {
     res.json({ message: error });
   }
 });
+
+function escapeRegex(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
 
 module.exports = router;
